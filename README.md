@@ -1,6 +1,8 @@
-# Linux
+# TPs LINUX
 
-Base 1 octet, 8 bits : 256 128 64 32 16 8 4 2
+Répertoire :
 
-
-10.33.69.159 --> 00001010.00100001.01000101.10011111
+- [TP 1](./TP1/README.md)
+- [TP 2](./TP2/TP_2.md)
+- [TP 3](./TP3/TP_3.md)
+- [TP 4 SOLO](./TP4%20SOLO/README.md)
