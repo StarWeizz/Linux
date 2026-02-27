@@ -69,9 +69,16 @@ $ openvpn --version
 ### Questions : 
 
 -   Où Easy-RSA crée-t-il ses fichiers ?
+> Easy-RSA crée ses fichiers dans le dossier /easy-rsa/pki/
+
 -   Que contient le dossier `pki/` ?
+> Le dossier pki/ contient : ca.crt (certificat d'autorité), private/ (les clés privées CA, serveur, clients), issued/ (certificats signés, serveurs + clients), reqs/, dh.pem (paramètres Diffie-Hellman), index.txt (base de données des certificats signés), serial (numéro de série des certificats)
+
 -   Quelle est la différence entre `gen-req` et `sign-req` ?
+> La commande gen-req permet de générer une clé privée et de demander un certificat. Et sign-req permet de signer la demande de certificat (validation officielle)
+
 -   Que se passe-t-il si vous oubliez de signer un certificat ?
+> Si on oublie de signer un certificat, le client ou le serveur ne pourra pas s'authentifier et donc la connexion au VPN sera refusée.
 
 # Partie 2 : Configuration du serveur OpenVPN
 
@@ -100,7 +107,7 @@ $ sudo nano /etc/openvpn/server/server.conf
 > dev tun signifique qu'on crée une interface virtuelle de niveau 3. Et tun pour tunnel ip.
 
 -   Quelle est la différence entre UDP et TCP pour un VPN ?
-> 
+> UDP est plus rapide et TCP est plus lent, et pour une connexion VPN on cherche la vitesse
 
 -   Quelle plage IP choisir pour le VPN ? Pourquoi ?
 > Pour le VPN on peut choisir la plage IP 10.8.0.0 (celle par défaut) car c'est une plage privée et elle ne doit pas rentrer en conflit avec LAN et le réseau NAT de VirtualBox
@@ -199,7 +206,49 @@ $ sudo /home/antonin/client1.ovpn
 -   Paramètres de chiffrement
 -   Authentification TLS
 
-![]
+```bash
+client
+dev tun
+proto udp
+remote 192.168.56.101 1194
+
+resolv-retry infinite
+nobind
+persist-key
+persist-tun
+
+remote-cert-tls server
+
+cipher AES-256-CBC
+auth SHA256
+
+verb 3
+
+<ca>
+-----BEGIN CERTIFICATE-----
+la clé
+-----END CERTIFICATE-----
+</ca>
+
+<cert>
+-----BEGIN CERTIFICATE-----
+clé
+-----END CERTIFICATE-----
+</cert>
+
+<key>
+-----BEGIN PRIVATE KEY-----
+clé 
+-----END PRIVATE KEY-----
+</key>
+
+<tls-crypt>
+-----BEGIN OpenVPN Static key V1-----
+la cmé
+-----END OpenVPN Static key V1-----
+</tls-crypt>
+
+```
 
 ### Questions : 
 
